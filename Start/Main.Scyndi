@@ -1,0 +1,127 @@
+// License Information:
+// Scyndi's Forest Quest
+// Start up File
+// 
+// 
+// 
+// (c) Jeroen P. Broks, 2012, 2015, 2023
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// 
+// Please note that some references to data like pictures or audio, do not automatically
+// fall under this licenses. Mostly this is noted in the respective files.
+// 
+// Version: 23.01.15
+// End License Information
+
+Script
+
+#use "Libs/SCI/Sys"
+#use "Libs/SCI/Events"
+#use "Libs/SCI/Graphics"
+#use "Libs/SCI/InterVar"
+
+#use "Script/Use/Mouse"
+#use "Script/Use/StartVars" 
+
+table Lang
+
+Var Fnt = ObtainFont("System")
+
+Class Language
+	Static Int Count = 0
+	ReadOnly Int ID
+	ReadOnly String Name
+	ReadOnly Var Flag
+		
+	Get int Y
+		return (Math.Floor(ID/5)*50)+100
+	End
+	
+	Get Int X
+		Return ((ID % 5)*150)+10
+	End
+	
+	get Bool Hover
+		// printf("%d:Mouse(%d,%d); Flag Pos(%d,%d), Flag Format %dx%d\n",ID,Events.MouseX,Events.MouseY,X,Y,Flag.Width,Flag.Height)
+		Return Events.MouseX>=X && Events.MouseY>=Y && Events.MouseX<=X+Flag.Width && Events.MouseY<=Y+Flag.Height
+	End
+	
+	Void Draw()
+		If Hover
+			SetColor(255,255,255)
+		Else
+			SetColor(127,127,127)
+		End
+		Flag.Draw(X,Y)
+	End
+	
+	
+	Static int Hue = Math.Random(0,360)
+		
+	Void ShowName()		
+		if Hover
+			Hue = (Hue + 1) % 360
+			SetColorHSV(Hue,1,1)
+			Fnt.Text(Name,Events.MouseX+20,Events.MouseY+20)
+			if (Events.MouseReleased(1))
+				StartVars.Lang = Name
+			end
+		end
+	end
+
+		
+	
+	Constructor(String N,String F)
+		Name = N
+		Flag = ObtainImage(F)
+		ID = Count
+		Lang[Count]=Self
+		Count++
+	End
+end
+
+var LangSelect
+
+
+
+init
+	LangSelect = ObtainImage("Select_Lang")
+	LangSelect.HotCenter()
+	new Language("English","Lang_English")
+	new Language("Nederlands","Lang_Dutch")
+End
+
+
+global void MainFlow()
+	Cls()
+	SetColor(255,255,255)
+	LangSelect.Draw(400,50)
+	// PrintF("Mouse A(%d,%d); R(%d,%d)\n",Events.MouseX,Events.MouseY,Events.TrueMouseX,Events.TrueMouseY) // debug only!
+	For F in Each(Lang)
+		F.Draw()
+	End
+	For F in Each(Lang)
+		F.ShowName()
+	End
+	if Events.AppTerminate() 
+		Sys.Exit()
+	end
+	Mouse.Show()
+end
+
+Init
+	Print("\x1b[0mMain Script! Loaded!")	
+	PrintF("Screen Check A:%dx%d R:%dx%d \n",Graphics.Width,Graphics.Height,Graphics.TrueWidth,Graphics.TrueHeight)
+	StartVars.InitStartVars()
+End

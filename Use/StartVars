@@ -1,0 +1,6 @@
+module
+
+#use "Libs/SCI/InterVar" 
+
+ReadOnly __V = new TInterVar("StartUp")
+
