@@ -1,0 +1,53 @@
+// License Information:
+// Scyndi's Forest Quest
+// Background
+// 
+// 
+// 
+// (c) Jeroen P. Broks, 2012, 2023
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// 
+// Please note that some references to data like pictures or audio, do not automatically
+// fall under this licenses. Mostly this is noted in the respective files.
+// 
+// Version: 23.01.16
+// End License Information
+Script
+
+#use "Libs/SCI/Sys"
+#use "Libs/SCI/Graphics"
+
+
+Init
+	print("Loading Sub: Background!")
+End
+
+byte R = 0
+byte G = 0
+byte B = 0
+
+var _bImg = ObtainImage("Background")
+
+global void DrawBack()
+	if G<127
+		G++
+	elif B<127
+		B++
+	elif R<127
+		R++
+	End
+	SetColor(R,G,B)
+	_bImg.Stretch(0,0,Graphics.Width,Graphics.Height)
+	//printf("Background %02x%02x%02x\n",R,G,B)
+end
