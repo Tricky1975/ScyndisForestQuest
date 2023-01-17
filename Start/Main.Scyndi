@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.16
+// Version: 23.01.17
 // End License Information
 
 Script
@@ -34,6 +34,7 @@ Script
 #use "Script/Use/Mouse"
 #use "Script/Use/StartVars" 
 #use "Script/Link/Back"
+#use "Script/Link/User"
 
 table Lang
 
@@ -77,6 +78,9 @@ Class Language
 			Fnt.Text(Name,Events.MouseX+20,Events.MouseY+20)
 			if (Events.MouseReleased(1))
 				StartVars.Lang = Name
+				If User.User==""
+					User.NewUser()
+				End
 			end
 		end
 	end
