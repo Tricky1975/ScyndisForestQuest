@@ -78,6 +78,8 @@ Class Language
 			Fnt.Text(Name,Events.MouseX+20,Events.MouseY+20)
 			if (Events.MouseReleased(1))
 				StartVars.Lang = Name
+				Var _Loc = new TInterVar("Lang")
+				
 				If User.User==""
 					User.NewUser()
 				End

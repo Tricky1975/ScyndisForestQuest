@@ -28,6 +28,7 @@ Script
 
 #use "Libs/SCI/Sys"
 #use "Libs/SCI/Events"
+#use "Script/Link/Back"
 #use "Script/Use/Mouse"
 
 int stage
@@ -37,7 +38,12 @@ global void ComeToMe()
 	GoToFlow("NEWUSER")
 End
 
+global void Scyndi_Back()
+	Back.Background()
+end
+
 global void MainFlow()
+	Scyndi_Back()
 	if Events.AppTerminate() 
 		Sys.Exit()
 	end
