@@ -21,14 +21,17 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.17
+// Version: 23.01.18
 // End License Information
 
 Script
 
 #use "Libs/SCI/Sys"
 #use "Libs/SCI/Events"
+
 #use "Script/Link/Back"
+#use "Script/Link/ScyndiSays"
+
 #use "Script/Use/Mouse"
 
 int stage
@@ -46,6 +49,20 @@ global void MainFlow()
 	Scyndi_Back()
 	if Events.AppTerminate() 
 		Sys.Exit()
+	end
+	switch stage
+		case 0
+			stage++
+			fallthrough
+		case 1
+			//Print("Scyndi welcomes you")
+			ScyndiSays.Say("Scyndi.Intro.A")
+			stage++
+		case 2
+			ScyndiSays.Say("Scyndi.Intro.B")
+			stage++
+		default
+			error(sprintf("I do not know how to handle New User stage #%d",stage))
 	end
 	Mouse.Show()
 end
