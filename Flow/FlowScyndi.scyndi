@@ -1,0 +1,96 @@
+// License Information:
+// Scyndi's Forest Quest
+// Scyndi Says
+// 
+// 
+// 
+// (c) Jeroen P. Broks, 2012, 2023
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// 
+// Please note that some references to data like pictures or audio, do not automatically
+// fall under this licenses. Mostly this is noted in the respective files.
+// 
+// Version: 23.01.18
+// End License Information
+Script
+
+#use "Libs/SCI/Sys"
+#use "Libs/SCI/Graphics"
+#use "Libs/SCI/Events"
+#use "Libs/SCI/State"
+
+#use "Script/Use/Lang"
+
+
+const var PicScyndi = ObtainImage("Gen_Scyndi")
+const Var Fnt = ObtainFont("Base")
+
+get int WScyndi
+	Return PicScyndi.Width
+End
+
+int XScyndi = -PicScyndi.Width
+
+Const int SAppear = 1
+Const Int SDisappear = -1
+Int ScyndiShould
+String BackFlow
+String TextTag
+Bool GoAway
+String Text
+
+global void ComeToMe(String _BackFlow, String _Text, Bool _GoAway)	
+	BackFlow = _BackFlow
+	TextTag = _Text
+	GoAway = _GoAway
+	ScyndiShould=SAppear
+	Text = LangText[TextTag]
+	if Sys.BuildState=="debug"		
+		print("Debug quick quit active!")
+	end
+	GoToFlow("Scyndi")
+end
+
+global void MainFlow()
+	State.Call("FLOW_"..BackFlow,"Scyndi_Back")
+	if ScyndiShould==SAppear && XScyndi<0
+		XScyndi++
+	elif ScyndiShould==SDisappear 
+		if XScyndi>0-WScyndi && GoAway
+			XScyndi--
+		else
+			GoToFlow(BackFlow)
+		End
+	End
+	SetColor(255,255,255)
+	PicScyndi.Draw(XScyndi,Graphics.Height-PicScyndi.Height)
+	if (XScyndi>-10)
+		plua tw
+		plua th		
+		//print("Size: ",TextTag,Text,Fnt.Size(Text))
+		//tw,th = Fnt.Size(Text)
+		tw,th = Lua.Graphics.TextSize("Base",Text)
+		//print("Size:", tw,th) // debug
+		th = th || 100
+		SetColor(127,90,0,100)		
+		//printf("Rect(%s,%s,%s,%s)\n",120,20,Graphics.Width-140,th+20) // debug
+		Rect(120,20,Graphics.Width-140,th+20)		
+		SetColor(255,180,0,255)
+		//printf("Text(%s,%s,%s)\n",Text,130,30) // debug
+		Fnt.Text(Text,125,30)
+	end
+	if Sys.BuildState=="debug" && Events.AppTerminate() 
+		Sys.Exit()
+	end
+End
