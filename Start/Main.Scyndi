@@ -82,8 +82,8 @@ Class Language
 				Var _Loc = new TInterVar("Lang")
 				printf("Loading language text '%s'\n",Name) 
 				_Loc.SFQLocal = JCR6.GetString("Text/"..Name)
-				If User.User==""
-					User.NewUser()
+				If !User.FileExists
+					User.NewUser()				
 				End
 			end
 		end

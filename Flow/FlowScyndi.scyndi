@@ -93,9 +93,17 @@ global void MainFlow()
 		//printf("Text(%s,%s,%s)\n",Text,130,30) // debug
 		Fnt.Text(Text,125,30)
 		int nx = Graphics.Width-PicNext.Width
-		int ny =  Graphics.Height-PicNext.Height
+		int ny = Graphics.Height-PicNext.Height
 		if Events.MouseX>nx && Events.MouseY>ny
 			setColor(255,255,255,255)
+			if Events.MouseHit()
+				if !GoAway
+					Sys.DontFlip(5)
+				end
+				//GoToFlow(BackFlow)
+				ScyndiShould = SDisappear
+				Events.Flush()
+			end
 		else
 			setColor(127,127,127,127)
 		end

@@ -27,6 +27,7 @@ Module
 
 #use "Libs/SCI/Sys"
 #use "Libs/SCI/State"
+#use "Libs/SCI/SGFile"
 #use "Script/use/startvars"
 
 Get String User
@@ -36,6 +37,11 @@ End
 Set String User
 	StartVars.User = Value	
 End
+
+get Bool FileExists
+	return StartVars.User!="" && SGFile.FileExists("Users/"..StartVars.User..".ini")
+end
+
 
 Void NewUser()
 	Sys.LoadNewFlow("NewUser","Script/Flow/NewUser.lbc")

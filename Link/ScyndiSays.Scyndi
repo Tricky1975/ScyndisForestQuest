@@ -34,6 +34,7 @@ void Say(String Text,GoAway,String ReturnFlow="")
 	If ReturnFlow==""
 		ReturnFlow = Replace(Lua.SCI_StateName,"FLOW_","")
 	End
+	print("Scyndi Says:",Text,ReturnFlow,GoAway)
 	Sys.LoadNewFlow("Scyndi","Script/Flow/FlowScyndi.lbc")
 	State.Call("Flow_Scyndi","ComeToMe",ReturnFlow,Text,GoAway==true)
 End

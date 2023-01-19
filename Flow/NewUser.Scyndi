@@ -28,11 +28,18 @@ Script
 
 #use "Libs/SCI/Sys"
 #use "Libs/SCI/Events"
+#use "Libs/SCI/Graphics"
 
 #use "Script/Link/Back"
 #use "Script/Link/ScyndiSays"
 
+#use "Script/Link/User"
+
 #use "Script/Use/Mouse"
+
+Const Var PicNext = ObtainImage("Next")
+const Var Fnt = ObtainFont("Base")
+const int NH = 50
 
 int stage
 
@@ -44,6 +51,64 @@ End
 global void Scyndi_Back()
 	Back.Background()
 end
+
+const table first = NewArray('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+const table other = NewArray('abcdefghijklmnopqrstuvwxyz_0123456789')
+const table shw = { [true]=first, [false]=other }
+
+string _Name = ""
+
+void EnterUserName()
+	//static plua _Name = ""
+	static plua LW = Graphics.Width div 10
+	static plua CW = Graphics.Width div 20
+	static plua LH = 50
+	_Name = _Name || ""
+	if Sys.BuildState=="debug"
+		fnt.Text(sprintf("Name %02d: %s",len(_name),_name),0,0)
+	end
+	SetColorHSV(os.time() % 360,1,1)
+	fnt.text(_Name,5,5)
+	if len(_Name)<15
+		for i,v in ipairs(shw[_Name==""])
+			int LX
+			int LY
+			LX = ((i%10)*LW)+CW
+			LY = 100+(LH*(i div 10))
+			// printf("#%d chr: %d/%s  (%d,%d) %dx%d\n",i,v,Chr(v),LX,LY,Graphics.Width,Graphics.Height)
+			if Events.MouseY>LY && Events.MouseX>LX-10 && Events.MouseX<LX+10 && Events.MouseY<LY+LH
+				SetColor(255,180,0)
+				if Events.MouseHit()
+					_Name = _Name .. Chr(v)
+					print(_Name,v,Chr(v))
+					Events.Flush()
+				End
+			Else
+				SetColor(255,255,255)
+			End
+			Fnt.Text(Chr(v),LX,LY)
+		end
+	end
+	if _Name!=""
+		int nx = Graphics.Width-PicNext.Width
+		int ny = Graphics.Height-PicNext.Height
+		if Events.MouseHit(3)
+			_Name = Left(_Name,len(_Name)-1)
+		elif Events.MouseX>nx && Events.MouseY>ny
+			setColor(255,255,255,255)
+			if Events.MouseHit()
+				stage++
+				Events.Flush()
+				User.User = _Name
+				_Name=""
+			end
+		else
+			setColor(127,127,127,127)
+		end
+		PicNext.Draw(nx,ny)	
+		setcolor(255,255,255,255)
+	end
+End
 
 global void MainFlow()
 	Scyndi_Back()
@@ -59,8 +124,17 @@ global void MainFlow()
 			ScyndiSays.Say("Scyndi.Intro.A")
 			stage++
 		case 2
-			ScyndiSays.Say("Scyndi.Intro.B")
+			ScyndiSays.Say("Scyndi.Intro.B",true)
 			stage++
+		case 3
+			EnterUserName()
+		case 4
+			ScyndiSays.Say("Scyndi.Intro.C")
+			stage++
+		case 5
+			ScyndiSays.Say("Scyndi.Intro.D",true)
+			stage++
+			
 		default
 			error(sprintf("I do not know how to handle New User stage #%d",stage))
 	end
