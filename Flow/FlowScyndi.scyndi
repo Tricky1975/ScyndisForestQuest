@@ -31,10 +31,13 @@ Script
 #use "Libs/SCI/State"
 
 #use "Script/Use/Lang"
+#use "Script/Use/Mouse"
+
 
 
 const var PicScyndi = ObtainImage("Gen_Scyndi")
 const Var Fnt = ObtainFont("Base")
+Const Var PicNext = ObtainImage("Next")
 
 get int WScyndi
 	Return PicScyndi.Width
@@ -73,7 +76,7 @@ global void MainFlow()
 			GoToFlow(BackFlow)
 		End
 	End
-	SetColor(255,255,255)
+	SetColor(255,255,255,255)
 	PicScyndi.Draw(XScyndi,Graphics.Height-PicScyndi.Height)
 	if (XScyndi>-10)
 		plua tw
@@ -89,8 +92,18 @@ global void MainFlow()
 		SetColor(255,180,0,255)
 		//printf("Text(%s,%s,%s)\n",Text,130,30) // debug
 		Fnt.Text(Text,125,30)
+		int nx = Graphics.Width-PicNext.Width
+		int ny =  Graphics.Height-PicNext.Height
+		if Events.MouseX>nx && Events.MouseY>ny
+			setColor(255,255,255,255)
+		else
+			setColor(127,127,127,127)
+		end
+		PicNext.Draw(nx,ny)		
 	end
 	if Sys.BuildState=="debug" && Events.AppTerminate() 
 		Sys.Exit()
 	end
+	setColor(255,255,255,255)
+	Mouse.Show()
 End
