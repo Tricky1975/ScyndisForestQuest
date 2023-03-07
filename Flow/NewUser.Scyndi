@@ -29,13 +29,16 @@ Script
 #use "Libs/SCI/Sys"
 #use "Libs/SCI/Events"
 #use "Libs/SCI/Graphics"
+#use "Libs/SCI/SGJCR"
 
 #use "Script/Link/Back"
 #use "Script/Link/ScyndiSays"
 
 #use "Script/Link/User"
+#use "Script/Link/MainMenu"
 
 #use "Script/Use/Mouse"
+#use "Script/Use/Lang"
 
 Const Var PicNext = ObtainImage("Next")
 const Var Fnt = ObtainFont("Base")
@@ -57,6 +60,18 @@ const table other = NewArray('abcdefghijklmnopqrstuvwxyz_0123456789')
 const table shw = { [true]=first, [false]=other }
 
 string _Name = ""
+
+bool CreateUser(string UN)
+	If SGJCR.Exists("Users/"..UN)
+		If !Events.Yes(Lang.Text.ExistName)
+			return False
+		End
+	End
+	Var SG = SGJCR.Create()
+	SG.Assign("Users/"..UN)
+	SG.TxtData.User = "[User]\nName="..UN.."\nCreated="..os.date().."\nLevel=0\nScore=0\n"
+	SG.Save()
+end
 
 void EnterUserName()
 	//static plua _Name = ""
@@ -97,10 +112,12 @@ void EnterUserName()
 		elif Events.MouseX>nx && Events.MouseY>ny
 			setColor(255,255,255,255)
 			if Events.MouseHit()
-				stage++
-				Events.Flush()
-				User.User = _Name
-				_Name=""
+				if CreateUser(_Name)
+					stage++
+					Events.Flush()
+					User.User = _Name				
+					_Name=""
+				end
 			end
 		else
 			setColor(127,127,127,127)
@@ -134,7 +151,9 @@ global void MainFlow()
 		case 5
 			ScyndiSays.Say("Scyndi.Intro.D",true)
 			stage++
-			
+		case 6
+			User.Load()
+			MainMenu.GoToMainMenu()
 		default
 			error(sprintf("I do not know how to handle New User stage #%d",stage))
 	end

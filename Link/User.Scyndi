@@ -28,7 +28,11 @@ Module
 #use "Libs/SCI/Sys"
 #use "Libs/SCI/State"
 #use "Libs/SCI/SGFile"
+#use "Libs/SCI/SGJCR"
+#use "Libs/SCI/GINIE"
 #use "Script/use/startvars"
+
+Var Data = GINIE.CreateNew("USER")
 
 Get String User
 	return StartVars.User
@@ -42,6 +46,13 @@ get Bool FileExists
 	return StartVars.User!="" && SGFile.FileExists("Users/"..StartVars.User..".ini")
 end
 
+Void Load()
+	printf("Loading user: %s\n",User)
+	var SG=SGJCR.Create("LoadUser")
+	SG.Assign("Users/"..User)
+	Data = GINIE.Parse(SG.TxtData.User,"USER")
+	// TODO: Level data
+End
 
 Void NewUser()
 	Sys.LoadNewFlow("NewUser","Script/Flow/NewUser.lbc")

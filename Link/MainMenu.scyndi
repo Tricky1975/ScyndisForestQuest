@@ -1,0 +1,5 @@
+Module
+
+Void GoToMainMenu()
+	error("Main menu not yet present")
+End
